@@ -1,0 +1,34 @@
+{
+	"name": "SpikyMineThing",
+	"spriteSheetImage": "SpikyMineThing.png",
+	"spriteWidth": 256,
+	"spriteHeight": 256,
+	"leftBuffer": 0,
+	"rightBuffer": 0,
+	"topBuffer": 0,
+	"bottomBuffer": 0,
+	"columns": 1,
+	"rows": 2,
+	"animations": [
+        {
+            "name": "IDLE",
+            "repeat": true,
+            "frames": [
+                {
+                    "index": 0,
+                    "duration": 10
+                }
+            ]
+        },
+        {
+            "name": "EXPLODING",
+            "repeat": true,
+            "frames": [
+                {
+                    "index": 1,
+                    "duration": 3
+                }
+            ]
+        }
+    ]
+}

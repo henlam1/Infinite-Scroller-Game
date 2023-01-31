@@ -1,0 +1,41 @@
+{ "compressionlevel":-1,
+ "height":3,
+ "infinite":false,
+ "layers":[
+        {
+         "data":[1, 1, 1, 1, 4, 4, 1, 4, 4],
+         "height":3,
+         "id":1,
+         "name":"Tile Layer 1",
+         "opacity":1,
+         "type":"tilelayer",
+         "visible":true,
+         "width":3,
+         "x":0,
+         "y":0
+        }],
+ "nextlayerid":2,
+ "nextobjectid":1,
+ "orientation":"isometric",
+ "renderorder":"right-down",
+ "tiledversion":"1.8.2",
+ "tileheight":32,
+ "tilesets":[
+        {    
+       "columns":10,
+       "firstgid":1,
+       "imageheight": 512,
+       "imagewidth":640,
+       "margin":0,
+       "name":"test tileset",
+       "spacing":0,
+       "tilecount":80,
+       "tileheight":64,
+       "tilewidth":64,
+       "image":"iso-64x64-building.png"
+        }],
+ "tilewidth":64,
+ "type":"map",
+ "version":"1.8",
+ "width":3
+}

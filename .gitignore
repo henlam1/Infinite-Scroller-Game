@@ -1,0 +1,11 @@
+node_modules
+
+dist/*
+
+!dist/builtin
+
+!dist/demo_assets
+
+!dist/hw2_assets
+
+**/.DS_store
