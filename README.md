@@ -1,5 +1,7 @@
 # Homework 2 - CSE 380 - Spring 2023
 - Professor Richard McKenna - richard@cs.stonybrook.edu
+- Joe Weaver - hweaver@cs.stonybrook.edu
+- Zachary Grandison - zgrandison@cs.stonybrook.edu
 - Peter Walsh - peter.t.walsh@stonybrook.edu
 - Kevin Cai - kevin.cai@stonybrook.edu
 ### Due Date: Friday, February 24, 2022
