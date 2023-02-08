@@ -16,7 +16,7 @@ export default class Receiver {
 
 	/** Creates a new Receiver */
 	constructor(id: string = "Unknown"){
-		this.MAX_SIZE = 10;
+		this.MAX_SIZE = 100;
 		this.id = id;
         this.q = new Queue(this.MAX_SIZE);
 	}
