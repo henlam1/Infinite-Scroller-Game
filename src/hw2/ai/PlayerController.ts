@@ -46,6 +46,9 @@ export default class PlayerController implements AI {
 	private receiver: Receiver;
 	private emitter: Emitter;
 
+	// Timer for last time hit
+	private timeSinceHit: number = 0;
+
 	/**
 	 * This method initializes all variables inside of this AI class.
      * 
@@ -61,6 +64,9 @@ export default class PlayerController implements AI {
 		this.laserTimer = new Timer(2500, this.handleLaserTimerEnd, false);
 		
 		this.receiver.subscribe(HW2Events.SHOOT_LASER);
+		this.receiver.subscribe(HW2Events.PLAYER_MINE_COLLISION);
+		this.receiver.subscribe(HW2Events.ALIVE);
+		this.receiver.subscribe(HW2Events.DEAD);
 
 		this.activate(options);
 	}
@@ -109,6 +115,7 @@ export default class PlayerController implements AI {
 	 * @param deltaT - the amount of time that has passed since the last update
 	 */
 	public update(deltaT: number): void {
+		this.timeSinceHit += deltaT;
         // First, handle all events 
 		while(this.receiver.hasNextEvent()){
 			this.handleEvent(this.receiver.getNextEvent());
@@ -155,6 +162,23 @@ export default class PlayerController implements AI {
 				this.handleShootLaserEvent(event);
 				break;
 			}
+			case HW2Events.DEAD: {
+				this.handleDeadEvent(event);
+				break;
+			}
+			case HW2Events.ALIVE: {
+				this.handleAliveEvent(event);
+				break;
+			}
+			case HW2Events.PLAYER_MINE_COLLISION: {
+				// Handle if hit cooldown is over
+				if (this.timeSinceHit >= 1) {
+					this.timeSinceHit = 0;
+					this.currentHealth -= 1;
+					this.handlePlayerMineCollisionEvent(event);
+				}
+				break;
+			}
 			default: {
 				throw new Error(`Unhandled event of type: ${event.type} caught in PlayerController`);
 			}
@@ -190,6 +214,29 @@ export default class PlayerController implements AI {
 		if (this.currentCharge < this.maxCharge) {
 			this.laserTimer.start();
 		}
+	}
+
+	/**
+	 * This function handles when the player collides with a mine.
+	 * @param event 
+	 */
+	protected handlePlayerMineCollisionEvent(event: GameEvent): void {
+		console.log("I got hit");
+		this.owner.animation.play(PlayerAnimations.HIT, false, HW2Events.ALIVE);
+	}
+
+	/**
+	 * This function handles when the player is dead.
+	 * @param event 
+	 */
+	protected handleDeadEvent(event: GameEvent): void {
+		console.log("I fucking died");
+		this.owner.animation.play(PlayerAnimations.DEATH, true);
+	}
+
+	protected handleAliveEvent(event: GameEvent): void {
+		console.log("Im still kickin");
+		this.owner.animation.play(PlayerAnimations.IDLE);
 	}
 
 } 

@@ -218,6 +218,10 @@ export default class HW2Scene extends Scene {
 	 */
 	protected handleEvent(event: GameEvent){
 		switch(event.type) {
+			case HW2Events.PLAYER_MINE_COLLISION: {
+				this.minesDestroyed += this.handleMinePlayerCollisions();
+				break;
+			}
 			case HW2Events.SHOOT_LASER: {
 				this.spawnLaser(event.data.get("src"));
 				break;
@@ -760,7 +764,7 @@ export default class HW2Scene extends Scene {
 		let collisions = 0;
 		for (let mine of this.mines) {
 			if (mine.visible && this.player.collisionShape.overlaps(mine.collisionShape)) {
-				this.emitter.fireEvent(HW2Events.PLAYER_MINE_COLLISION, {id: mine.id});
+				this.emitter.fireEvent(HW2Events.PLAYER_MINE_COLLISION, { mineId: mine.id});
 				collisions += 1;
 			}
 		}	
