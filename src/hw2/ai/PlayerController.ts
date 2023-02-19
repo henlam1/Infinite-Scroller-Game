@@ -221,7 +221,6 @@ export default class PlayerController implements AI {
 	 * @param event 
 	 */
 	protected handlePlayerMineCollisionEvent(event: GameEvent): void {
-		console.log("I got hit");
 		this.owner.animation.play(PlayerAnimations.HIT, false, HW2Events.ALIVE);
 	}
 
@@ -230,12 +229,10 @@ export default class PlayerController implements AI {
 	 * @param event 
 	 */
 	protected handleDeadEvent(event: GameEvent): void {
-		console.log("I fucking died");
 		this.owner.animation.play(PlayerAnimations.DEATH, true);
 	}
 
 	protected handleAliveEvent(event: GameEvent): void {
-		console.log("Im still kickin");
 		this.owner.animation.play(PlayerAnimations.IDLE);
 	}
 
