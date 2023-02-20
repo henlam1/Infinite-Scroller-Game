@@ -1,8 +1,10 @@
 import AI from "../../Wolfie2D/DataTypes/Interfaces/AI";
 import Vec2 from "../../Wolfie2D/DataTypes/Vec2";
 import GameEvent from "../../Wolfie2D/Events/GameEvent";
+import Receiver from "../../Wolfie2D/Events/Receiver";
 import Graphic from "../../Wolfie2D/Nodes/Graphic";
 import MathUtils from "../../Wolfie2D/Utils/MathUtils";
+import { HW2Events } from "../HW2Events";
 
 /**
  * A class that represents the behavior of the bubbles in the HW2Scene
@@ -11,6 +13,7 @@ import MathUtils from "../../Wolfie2D/Utils/MathUtils";
 export default class BubbleBehavior implements AI {
     // The GameNode that owns this behavior
     private owner: Graphic;
+    private receiver: Receiver;
 
     // The current horizontal and vertical speed of the bubble
     private currentXSpeed: number;
@@ -30,6 +33,9 @@ export default class BubbleBehavior implements AI {
 
     public initializeAI(owner: Graphic, options: Record<string, any>): void {
         this.owner = owner;
+
+        this.receiver = new Receiver();
+        this.receiver.subscribe(HW2Events.PLAYER_BUBBLE_COLLISION);
 
         this.currentXSpeed = 50;
         this.xSpeedIncrement = 0;
@@ -52,6 +58,10 @@ export default class BubbleBehavior implements AI {
 
     public handleEvent(event: GameEvent): void {
         switch(event.type) {
+            case HW2Events.PLAYER_BUBBLE_COLLISION: {
+                this.handlePlayerBubbleCollision(event);
+                break;
+            }
             default: {
                 throw new Error("Unhandled event caught in BubbleBehavior! Event type: " + event.type);
             }
@@ -59,6 +69,9 @@ export default class BubbleBehavior implements AI {
     }
 
     public update(deltaT: number): void {   
+        while (this.receiver.hasNextEvent()) {
+            this.handleEvent(this.receiver.getNextEvent());
+        }
         // Only update the bubble if it's visible
         if (this.owner.visible) {
             // Increment the speeds
@@ -70,6 +83,14 @@ export default class BubbleBehavior implements AI {
 
             // Update position of the bubble - I'm scaling the Vec2.UP and Vec2.LEFT vectors to move the bubble up and to the left
             this.owner.position.add(Vec2.UP.scale(this.currentYSpeed * deltaT)).add(Vec2.LEFT.scale(this.currentXSpeed* deltaT));
+        }
+    }
+
+    protected handlePlayerBubbleCollision(event: GameEvent): void {
+        let id = event.data.get("bubbleId");
+        if (id === this.owner.id) {
+            console.log("Making bubble invisible")
+            this.owner.position.copy(Vec2.ZERO);
         }
     }
     

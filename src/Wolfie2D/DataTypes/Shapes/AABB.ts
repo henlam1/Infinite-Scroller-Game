@@ -190,6 +190,9 @@ export default class AABB extends Shape {
         if(other instanceof AABB){
             return this.overlapsAABB(other);
         }
+        else if(other instanceof Circle){
+            return this.overlapsCircle(other);
+        }
         throw "Overlap not defined between these shapes."
     }
 
@@ -213,6 +216,27 @@ export default class AABB extends Shape {
             return false;
         }
 
+        return true;
+    }
+
+    /**
+     * A simple boolean check of whether this AABB overlaps a Circle
+     * @param other The other Circle to check against
+     * @returns True if this AABB overlaps the Circle, false otherwise
+     */
+    protected overlapsCircle(circle: Circle): boolean {
+        let closestx = MathUtils.clamp(circle.x ,this.left, this.right)
+        let closesty = MathUtils.clamp(circle.y ,this.top, this.bottom)
+
+        let xFromCenter = Math.abs(circle.x - closestx);
+        let yFromCenter = Math.abs(circle.y - closesty);
+        
+        let distanceFromCenter = Math.sqrt(xFromCenter ** 2 + yFromCenter ** 2); 
+
+        if(distanceFromCenter > circle.radius) {
+            return false;
+        }
+        
         return true;
     }
 

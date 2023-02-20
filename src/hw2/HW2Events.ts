@@ -1,13 +1,27 @@
 /**
  * Events that get emitted in HW2.
- */
+*/
 export const HW2Events = {
     /**
      * The event that gets emitted when the player collides with a mine
      * 
-     * Has data: { id: number }
-     */
-	PLAYER_MINE_COLLISION: "PLAYER_MINE_COLLISION", 
+     * Has data: { mineId: mine.id }
+    */
+   PLAYER_MINE_COLLISION: "PLAYER_MINE_COLLISION", 
+
+   /**
+     * The event that gets emitted when the player collides with a bubble
+     * 
+     * Has data: { bubbleId: bubble.id }
+    */
+   PLAYER_BUBBLE_COLLISION: "PLAYER_BUBBLE_COLLISION", 
+
+   /**
+     * The event that gets emitted when the laser collides with a mine
+     * 
+     * Has data: { mineId: mine.id, laserId: laser.id }
+    */
+   LASER_MINE_COLLISION: "LASER_MINE_COLLISION",
 
     /**
      * The event that gets emitted when the charge of the player's laser beam changes
@@ -17,11 +31,32 @@ export const HW2Events = {
     CHARGE_CHANGE: "CHARGE_CHANGE",
 
     /**
+     * The event that gets emitted when the health of the player changes
+     * 
+     * Has data: { curhp: number, maxhp: number }
+     */
+    HEALTH_CHANGE: "HEALTH_CHANGE",
+
+    /**
+     * The event that gets emitted when the air of the player changes
+     * 
+     * Has data: { curair: number, maxair: number }
+     */
+    AIR_CHANGE: "AIR_CHANGE",
+
+    /**
      * The event that gets emitted when the player's health hits 0 (or minhealth)
      * 
      * Has data: {}
      */
 	DEAD: "DEAD",
+
+     /**
+     * The event that gets emitted when the player stays alive
+     * 
+     * Has data: {}
+     */
+    ALIVE: "ALIVE",
 
     /**
      * The event that gets emitted when the player succesfully fires their laser beam. The
@@ -39,10 +74,11 @@ export const HW2Events = {
      */
     FIRING_LASER: "LASER_FIRING",
 
-    LASER_MINE_COLLISION: "LASER_MINE_COLLISION",
-
+    /**
+     * The event that gets emitted when a mine explodes.
+     * 
+     * Has data: {}
+     */
     MINE_EXPLODED: "MINE_EXPLODED",
-
-    ALIVE: "ALIVE"
     
 } as const;
