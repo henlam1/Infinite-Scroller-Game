@@ -43,6 +43,7 @@ export default class PlayerController implements AI {
 
 	/** A timer for charging the player's laser cannon thing */
 	private laserTimer: Timer;
+	private iFrameTimer: Timer;
 
 	// A receiver and emitter to hook into the event queue
 	private receiver: Receiver;
@@ -64,6 +65,7 @@ export default class PlayerController implements AI {
 		this.emitter = new Emitter();
 
 		this.laserTimer = new Timer(2500, this.handleLaserTimerEnd, false);
+		this.iFrameTimer = new Timer(1000);
 		
 		this.receiver.subscribe(HW2Events.SHOOT_LASER);
 		this.receiver.subscribe(HW2Events.PLAYER_MINE_COLLISION);
@@ -174,13 +176,9 @@ export default class PlayerController implements AI {
 				break;
 			}
 			case HW2Events.PLAYER_MINE_COLLISION: {
-				// Handle if hit cooldown is over
-				if (this.timeSinceHit >= 1) {
-					this.timeSinceHit = 0;
+				if (this.iFrameTimer.isStopped()) {
+					this.iFrameTimer.start();
 					this.handlePlayerMineCollisionEvent(event);
-					this.currentHealth = MathUtils.clamp(this.currentHealth - 1, this.minHealth, this.maxHealth);
-					this.emitter.fireEvent(HW2Events.HEALTH_CHANGE, {curhp: this.currentHealth, maxhp: this.maxHealth});
-					console.log(this.currentHealth);
 				}
 				break;
 			}
@@ -239,6 +237,8 @@ export default class PlayerController implements AI {
 	 */
 	protected handlePlayerMineCollisionEvent(event: GameEvent): void {
 		this.owner.animation.play(PlayerAnimations.HIT, false, HW2Events.ALIVE);
+		this.currentHealth = MathUtils.clamp(this.currentHealth - 1, this.minHealth, this.maxHealth);
+		this.emitter.fireEvent(HW2Events.HEALTH_CHANGE, {curhp: this.currentHealth, maxhp: this.maxHealth});
 	}
 
 	/**

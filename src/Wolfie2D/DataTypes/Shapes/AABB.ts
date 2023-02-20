@@ -225,17 +225,22 @@ export default class AABB extends Shape {
      * @returns True if this AABB overlaps the Circle, false otherwise
      */
     protected overlapsCircle(circle: Circle): boolean {
-        let closestx = MathUtils.clamp(circle.x ,this.left, this.right)
-        let closesty = MathUtils.clamp(circle.y ,this.top, this.bottom)
-
-        let xFromCenter = Math.abs(circle.x - closestx);
-        let yFromCenter = Math.abs(circle.y - closesty);
+        let point = new Vec2();
         
-        let distanceFromCenter = Math.sqrt(xFromCenter ** 2 + yFromCenter ** 2); 
+        point.x = MathUtils.clamp(circle.x ,this.left, this.right)
+        point.y = MathUtils.clamp(circle.y ,this.top, this.bottom)
 
-        if(distanceFromCenter > circle.radius) {
+        if(point.distanceTo(circle.center) > circle.radius) {
             return false;
         }
+        // let xFromCenter = Math.abs(circle.x - closestx);
+        // let yFromCenter = Math.abs(circle.y - closesty);
+        
+        // let distanceFromCenter = Math.sqrt(xFromCenter ** 2 + yFromCenter ** 2); 
+
+        // if(distanceFromCenter > circle.radius) {
+        //     return false;
+        // }
         
         return true;
     }

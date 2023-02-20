@@ -505,7 +505,7 @@ export default class HW2Scene extends Scene {
 
 			// Loop on position until we're clear of the player
 			mine.position.copy(RandUtils.randVec(viewportSize.x, paddedViewportSize.x, paddedViewportSize.y - viewportSize.y, viewportSize.y));
-			while(mine.position.distanceTo(this.player.position) < 50){
+			while(mine.position.distanceTo(this.player.position) < 100){
 				mine.position.copy(RandUtils.randVec(paddedViewportSize.x, paddedViewportSize.x, paddedViewportSize.y - viewportSize.y, viewportSize.y));
 			}
 
@@ -614,7 +614,18 @@ export default class HW2Scene extends Scene {
 	 * It may be helpful to make your own drawings while figuring out the math for this part.
 	 */
 	public handleScreenDespawn(node: CanvasNode): void {
-        // TODO - despawn the game nodes when they move out of the padded viewport
+        // Extract the size of the viewport
+		let paddedViewportSize = this.viewport.getHalfSize().scaled(2).add(this.worldPadding);
+		let viewportSize = this.viewport.getHalfSize().scaled(2);
+		
+		let leftBound = (paddedViewportSize.x - viewportSize.x) - (2 * this.worldPadding.x); 
+		let topBound = (paddedViewportSize.y - viewportSize.y) - (2 * this.worldPadding.y);
+
+		if(node.position.x < leftBound || node.position.y < topBound ) {
+			console.log("Despawning node: " + node.id);
+			node.position.copy(Vec2.ZERO);
+			node.visible = false;
+		}
 	}
 
 	/** Methods for updating the UI */

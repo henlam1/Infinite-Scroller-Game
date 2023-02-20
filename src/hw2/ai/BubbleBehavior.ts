@@ -89,7 +89,6 @@ export default class BubbleBehavior implements AI {
     protected handlePlayerBubbleCollision(event: GameEvent): void {
         let id = event.data.get("bubbleId");
         if (id === this.owner.id) {
-            console.log("Making bubble invisible")
             this.owner.position.copy(Vec2.ZERO);
         }
     }
