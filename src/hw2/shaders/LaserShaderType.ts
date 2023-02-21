@@ -63,6 +63,11 @@ export default class LaserShaderType extends RectShaderType {
 		const u_Transform = gl.getUniformLocation(program, "u_Transform");
 		gl.uniformMatrix4fv(u_Transform, false, transformation.toArray());
 
+		//color
+		let webGL_color = options.color.toWebGL();
+		const laser_color = gl.getUniformLocation(program, "laser_Color");
+		gl.uniform4f(laser_color, webGL_color[0], webGL_color[1], webGL_color[2], webGL_color[3]);
+		
 		// Draw the quad
 		gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
 	}
@@ -72,6 +77,7 @@ export default class LaserShaderType extends RectShaderType {
 			position: gc.position,
 			size: gc.size,
 			rotation: gc.rotation,
+			color: gc.color
 		}
 		return options;
 	}
