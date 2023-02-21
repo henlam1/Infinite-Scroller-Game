@@ -18,6 +18,7 @@ export default abstract class CanvasNode extends GameNode implements Region {
 
 	/** A flag for whether or not the CanvasNode is visible */
 	visible: boolean = true;
+	touched: boolean = false;
 	
 	constructor(){
 		super();

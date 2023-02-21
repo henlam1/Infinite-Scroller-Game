@@ -26,6 +26,7 @@ import Debug from "../Debug/Debug";
 import TimerManager from "../Timing/TimerManager";
 import TweenManager from "../Rendering/Animations/TweenManager";
 import ParticleSystemManager from "../Rendering/Animations/ParticleSystemManager";
+import PlaybackManager from "../Playback/PlaybackManager";
 
 /**
  * Scenes are the main container in the game engine.

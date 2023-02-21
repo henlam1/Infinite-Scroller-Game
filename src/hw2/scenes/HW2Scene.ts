@@ -235,7 +235,9 @@ export default class HW2Scene extends Scene {
 				break;
 			}
 			case HW2Events.DEAD: {
-				this.gameOverTimer.start();
+				if(!this.gameOverTimer.hasRun() && this.gameOverTimer.isStopped()) {
+					this.gameOverTimer.start();
+				}
 				break;
 			}
 			case HW2Events.SHOOT_LASER: {
@@ -809,7 +811,8 @@ export default class HW2Scene extends Scene {
 	public handleMinePlayerCollisions(): number {
 		let collisions = 0;
 		for (let mine of this.mines) {
-			if (mine.visible && this.player.collisionShape.overlaps(mine.collisionShape)) {
+			if (mine.visible && !mine.touched && this.player.collisionShape.overlaps(mine.collisionShape)) {
+				mine.touched = true;
 				this.emitter.fireEvent(HW2Events.PLAYER_MINE_COLLISION, { mineId: mine.id});
 				collisions += 1;
 			}

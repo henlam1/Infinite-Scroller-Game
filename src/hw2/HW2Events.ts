@@ -49,7 +49,7 @@ export const HW2Events = {
      * 
      * Has data: {}
      */
-	DEAD: "DEAD",
+	  DEAD: "DEAD",
 
      /**
      * The event that gets emitted when the player stays alive
@@ -65,7 +65,7 @@ export const HW2Events = {
      * 
      * Has data: { src: Vec2 }
      */
-	SHOOT_LASER: "SHOOT_LASER",
+	  SHOOT_LASER: "SHOOT_LASER",
 
     /**
      * The event that gets emitted when a laser first starts to fire.

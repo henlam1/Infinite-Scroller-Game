@@ -78,6 +78,9 @@ export default class MineBehavior implements AI {
         if (this.owner.visible) {
             this.owner.position.add(this.direction.scaled(this.speed * deltaT));
         }
+        if (!this.owner.visible) {
+            this.owner.touched = false;
+        }
     }
 
     /**
