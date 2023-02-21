@@ -192,7 +192,9 @@ export default class HW2Scene extends Scene {
 		// Handle timers
 		this.handleTimers();
 
-        // TODO Remove despawning of mines and bubbles here
+        // Handle wrapping/locking of player
+		this.wrapPlayer(this.player, this.viewport.getCenter(), this.viewport.getHalfSize());
+		this.lockPlayer(this.player, this.viewport.getCenter(), this.viewport.getHalfSize());
 
 		// Handle screen despawning of mines and bubbles
 		for (let mine of this.mines) if (mine.visible) this.handleScreenDespawn(mine);
@@ -622,7 +624,6 @@ export default class HW2Scene extends Scene {
 		let topBound = (paddedViewportSize.y - viewportSize.y) - (2 * this.worldPadding.y);
 
 		if(node.position.x < leftBound || node.position.y < topBound ) {
-			console.log("Despawning node: " + node.id);
 			node.position.copy(Vec2.ZERO);
 			node.visible = false;
 		}
@@ -908,7 +909,12 @@ export default class HW2Scene extends Scene {
 	 * 							X THIS IS OUT OF BOUNDS													
 	 */
 	protected wrapPlayer(player: CanvasNode, viewportCenter: Vec2, viewportHalfSize: Vec2): void {
-		// TODO wrap the player around the top/bottom of the screen
+		let playerY = player.position.y;
+		let topY = viewportCenter.y - viewportHalfSize.y;
+		let botY = viewportCenter.y + viewportHalfSize.y;
+
+		if(playerY <= topY) { player.position.y = botY; }
+		if(playerY >= botY) { player.position.y = topY; }
 	}
 
     /**
@@ -951,7 +957,11 @@ export default class HW2Scene extends Scene {
 	 * 
 	 */
 	protected lockPlayer(player: CanvasNode, viewportCenter: Vec2, viewportHalfSize: Vec2): void {
-		// TODO prevent the player from moving off the left/right side of the screen
+		let playerSizeX = player.sizeWithZoom.x;
+		let leftX = viewportCenter.x - viewportHalfSize.x + playerSizeX;
+		let rightX = viewportCenter.x + viewportHalfSize.x;
+
+		player.position.x = MathUtils.clamp(player.position.x, leftX, rightX);
 	}
 
 	public handleTimers(): void {
