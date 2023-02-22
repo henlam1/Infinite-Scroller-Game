@@ -28,6 +28,8 @@ import LaserShaderType from "../shaders/LaserShaderType";
 
 import { GameEventType } from "../../Wolfie2D/Events/GameEventType";
 import BasicRecording from "../../Wolfie2D/Playback/BasicRecording";
+import BasicRecorder from "../../Wolfie2D/Playback/BasicRecorder";
+import BasicReplayer from "../../Wolfie2D/Playback/BasicReplayer";
 
 import { HW2Events } from "../HW2Events";
 import Layer from "../../Wolfie2D/Scene/Layer";
@@ -64,6 +66,10 @@ export default class HW2Scene extends Scene {
 
     // A flag to indicate whether or not this scene is being recorded
     private recording: boolean;
+	private basicRecording: BasicRecording;
+	private basicRecorder: BasicRecorder;
+	private basicReplayer: BasicReplayer;
+
     // The seed that should be set before the game starts
     private seed: string;
 
@@ -116,6 +122,13 @@ export default class HW2Scene extends Scene {
 	public override initScene(options: Record<string, any>): void {
 		this.seed = options.seed === undefined ? RandUtils.randomSeed() : options.seed;
         this.recording = options.recording === undefined ? false : options.recording; 
+		RandUtils.seed = this.seed;
+
+		this.basicRecorder = new BasicRecorder();
+		this.basicReplayer = new BasicReplayer();
+		this.basicRecording = new BasicRecording(HW2Scene, {
+			seed: this.seed,
+		})
 	}
 	/**
 	 * @see Scene.loadScene()
@@ -171,6 +184,15 @@ export default class HW2Scene extends Scene {
 
 		// Subscribe to laser events
 		this.receiver.subscribe(HW2Events.FIRING_LASER);
+
+		//Subscribe to recording events
+		if(this.recording){
+			this.receiver.subscribe(GameEventType.PLAY_RECORDING);
+			this.receiver.subscribe(GameEventType.START_RECORDING);
+			this.receiver.subscribe(GameEventType.STOP_RECORDING);
+			this.emitter.fireEvent(GameEventType.START_RECORDING, {recording: this.basicRecording});
+		}
+		
 	}
 	/**
 	 * @see Scene.updateScene 
@@ -246,6 +268,19 @@ export default class HW2Scene extends Scene {
 			}
 			case HW2Events.FIRING_LASER: {
 				this.minesDestroyed += this.handleMineLaserCollisions(event.data.get("laser"), this.mines);
+				break;
+			}
+
+			case GameEventType.PLAY_RECORDING: {
+				this.basicReplayer.start(this.basicRecording, event.data.get("onEnd"));
+				break;
+			}
+			case GameEventType.START_RECORDING: {
+				this.basicRecorder.start(event.data.get("recording"));
+				break;
+			}
+			case GameEventType.STOP_RECORDING: {
+				this.basicRecorder.stop();
 				break;
 			}
 			default: {
@@ -354,7 +389,7 @@ export default class HW2Scene extends Scene {
 		this.bubbleSpawnTimer = new Timer(2500);
 		this.bubbleSpawnTimer.start();
 
-		this.gameOverTimer = new Timer(3000);
+		this.gameOverTimer = new Timer(3000, () => {this.emitter.fireEvent(GameEventType.STOP_RECORDING);});
 	}
 	/**
 	 * Initializes the background image sprites for the game.
@@ -962,7 +997,7 @@ export default class HW2Scene extends Scene {
 	protected lockPlayer(player: CanvasNode, viewportCenter: Vec2, viewportHalfSize: Vec2): void {
 		let playerSizeX = player.sizeWithZoom.x;
 		let leftX = viewportCenter.x - viewportHalfSize.x + playerSizeX;
-		let rightX = viewportCenter.x + viewportHalfSize.x;
+		let rightX = viewportCenter.x + viewportHalfSize.x - playerSizeX;
 
 		player.position.x = MathUtils.clamp(player.position.x, leftX, rightX);
 	}
