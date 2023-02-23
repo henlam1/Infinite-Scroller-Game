@@ -89,6 +89,7 @@ export default class BasicReplayer implements Replayer<BasicRecording, BasicLogI
             InputHandlers.MOUSE_MOVE, InputHandlers.KEY_DOWN, InputHandlers.KEY_UP, 
             InputHandlers.ON_BLUR, InputHandlers.ON_WHEEL
         ]});
+        this.emitter.fireEvent(GameEventType.CANVAS_BLUR);
     }
     /**
      * @see Replayer.destroy()
