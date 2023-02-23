@@ -28,8 +28,6 @@ import LaserShaderType from "../shaders/LaserShaderType";
 
 import { GameEventType } from "../../Wolfie2D/Events/GameEventType";
 import BasicRecording from "../../Wolfie2D/Playback/BasicRecording";
-import BasicRecorder from "../../Wolfie2D/Playback/BasicRecorder";
-import BasicReplayer from "../../Wolfie2D/Playback/BasicReplayer";
 
 import { HW2Events } from "../HW2Events";
 import Layer from "../../Wolfie2D/Scene/Layer";
@@ -67,8 +65,6 @@ export default class HW2Scene extends Scene {
     // A flag to indicate whether or not this scene is being recorded
     private recording: boolean;
 	private basicRecording: BasicRecording;
-	private basicRecorder: BasicRecorder;
-	private basicReplayer: BasicReplayer;
 
     // The seed that should be set before the game starts
     private seed: string;
@@ -124,8 +120,6 @@ export default class HW2Scene extends Scene {
         this.recording = options.recording === undefined ? false : options.recording; 
 		RandUtils.seed = this.seed;
 
-		this.basicRecorder = new BasicRecorder();
-		this.basicReplayer = new BasicReplayer();
 		this.basicRecording = new BasicRecording(HW2Scene, {
 			seed: this.seed,
 		})
@@ -187,9 +181,6 @@ export default class HW2Scene extends Scene {
 
 		//Subscribe to recording events
 		if(this.recording){
-			this.receiver.subscribe(GameEventType.PLAY_RECORDING);
-			this.receiver.subscribe(GameEventType.START_RECORDING);
-			this.receiver.subscribe(GameEventType.STOP_RECORDING);
 			this.emitter.fireEvent(GameEventType.START_RECORDING, {recording: this.basicRecording});
 		}
 		
@@ -268,19 +259,6 @@ export default class HW2Scene extends Scene {
 			}
 			case HW2Events.FIRING_LASER: {
 				this.minesDestroyed += this.handleMineLaserCollisions(event.data.get("laser"), this.mines);
-				break;
-			}
-
-			case GameEventType.PLAY_RECORDING: {
-				this.basicReplayer.start(this.basicRecording, event.data.get("onEnd"));
-				break;
-			}
-			case GameEventType.START_RECORDING: {
-				this.basicRecorder.start(event.data.get("recording"));
-				break;
-			}
-			case GameEventType.STOP_RECORDING: {
-				this.basicRecorder.stop();
 				break;
 			}
 			default: {
